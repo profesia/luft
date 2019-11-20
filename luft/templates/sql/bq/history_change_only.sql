@@ -53,7 +53,7 @@ MERGE INTO {{ HISTORY_SCHEMA }}.{{ TABLE_NAME }} t
         -- and same hashes because we want to compare only same rows
         t.DW_HASH_DIFF = s.DW_HASH_DIFF
         -- and also need compare only last instance (day) with new data
-        AND t.DW_VALID_TO = s.dw_last_load_date
+        AND t.DW_VALID_TO = s.dw_last_load_date)
     -- if new data is not same as last increment then insert data
     WHEN NOT MATCHED THEN
         INSERT (
