@@ -52,7 +52,7 @@ MERGE INTO {{ HISTORY_SCHEMA }}.{{ TABLE_NAME }} t
         -- and same hashes because we want to compare only same rows
         t.DW_HASH_DIFF = s.DW_HASH_DIFF
         -- and also need compare only last instance (day) with new data
-        AND t.DW_VALID_TO = TIMESTAMP_SUB(s.DW_VALID_TO, INTERVAL 1 DAY))
+        AND t.DW_VALID_TO = IFNULL((SELECT MAX(DW_VALID_TO) FROM {{ HISTORY_SCHEMA }}.{{ TABLE_NAME }}), CURRENT_TIMESTAMP())
     -- if new data is not same as last increment then insert data
     WHEN NOT MATCHED THEN
         INSERT (
