@@ -7,7 +7,7 @@ from google.cloud import bigquery
 
 from luft.common.column import Column
 from luft.common.config import (
-    BQ_DATA_TYPES, BQ_HIST_DEFAULT_TEMPLATE, BQ_STAGE_DEFAULT_TEMPLATE, BQ_STAGE_NO_HIST_DEFAULT_TEMPLATE,
+    BQ_DATA_TYPES, BQ_HIST_DEFAULT_TEMPLATE, BQ_STAGE_DEFAULT_TEMPLATE, BQ_STAGE_NO_HIST_DEFAULT_TEMPLATE, BQ_STAGE_NO_HIST_BEFORE_LOAD,
     BQ_STAGE_SCHEMA_FORM, BQ_HIST_SCHEMA_FORM, BQ_HIST_DISABLE, GCS_BUCKET, PATH_PREFIX)
 from luft.common.logger import setup_logger
 from luft.common.utils import NoneStr, get_path_prefix
@@ -80,6 +80,8 @@ class BQLoadTask(BQExecTask):
         """
         stage_template = Path(pkg_resources.resource_filename(
             'luft', BQ_STAGE_DEFAULT_TEMPLATE))
+        no_hist_before_load = Path(pkg_resources.resource_filename(
+            'luft', BQ_STAGE_NO_HIST_BEFORE_LOAD))
         no_hist_stage_template = Path(pkg_resources.resource_filename(
             'luft', BQ_STAGE_NO_HIST_DEFAULT_TEMPLATE))
         hist_template = Path(pkg_resources.resource_filename(
@@ -95,6 +97,10 @@ class BQLoadTask(BQExecTask):
                                  env_vars)
 
         BQLoadTask.load_count += 1
+        if (BQ_HIST_DISABLE):
+            self._run_bq_command(stage_template.parent, [no_hist_before_load.name],
+                             env_vars)
+
         self.load_csv()
         if (BQ_HIST_DISABLE):
             time.sleep(2)
