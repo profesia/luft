@@ -1,4 +1,4 @@
-FROM ubuntu:bionic
+FROM ubuntu:bionic AS builder
 
 
 # Embulk variables
@@ -52,7 +52,12 @@ RUN if [ "$NONEMBULK_GEM" != "" ]; then embulk.jar gem install ${NONEMBULK_GEM};
 # Todo Get rid of this after publishing ot Pypi
 ADD . /work
 WORKDIR /work
-# Install luft
+
+
+FROM builder AS prod
 RUN pip3 install -e ".[bq]"
 ENTRYPOINT ["luft"]
 CMD ["--help"]
+
+FROM builder AS test
+RUN pip3 install -e ".[bq,dev]"
