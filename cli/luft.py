@@ -151,6 +151,23 @@ def load(ctx: click.core.Context, yml_path: str, start_date: str,  # start_time:
     _loop_tasks(task_list, start_date, end_date)
 
 
+@bq.command(help='Load data from GCS to BigQuery.')
+@add_options(task_list_options)
+@click.option('--script-blacklist', '-sb', multiple=True)
+@click.option('--script-whitelist', '-sw', multiple=True)
+@click.pass_context
+def loadstaging(ctx: click.core.Context, yml_path: str, start_date: str,  # start_time: str,
+         end_date: str, source_system: str, source_subsystem: str, blacklist: List[str],
+         whitelist: List[str], glob_filter: str, script_whitelist: Union[List[str], None],
+         script_blacklist: Union[List[str], None]):
+    """Load data from GCS and historize them in BigQuery."""
+    task_list = _create_tasks(task_type='bq-load-staging', yml_path=yml_path,
+                              source_system=source_system, source_subsystem=source_subsystem,
+                              blacklist=blacklist, whitelist=whitelist, glob_filter=glob_filter)
+    _loop_tasks(task_list, start_date, end_date)
+
+
+
 @luft.group(help='Tools for working with Qlik Metrics.')
 @click.pass_context
 def qlik_metric(_ctx):
