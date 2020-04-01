@@ -25,4 +25,4 @@ dockerbuildprod:
 	docker build -t luft:prod --target prod .
 
 dockerbuilddev:
-	docker build -t luft:dev --target dev .
+	docker build -t luft:dev --target prod .

@@ -11,5 +11,5 @@ class BQLoadStagingTaskSchema(BQLoadTaskSchema):
 
     @post_load
     def make_task(self, data, **kwargs):
-        merged = { **data, **kwargs}
-        return BQLoadStagingTask(**merged)
+
+        return BQLoadStagingTask(**kwargs)
