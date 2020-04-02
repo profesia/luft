@@ -2,7 +2,7 @@
 """BigQuery Load Task."""
 from pathlib import Path
 
-from luft.common.config import ( BQ_STAGE_NO_HIST_DEFAULT_TEMPLATE )
+from luft.common.config import ( BQ_STAGE_DEFAULT_TEMPLATE )
 from luft.common.logger import setup_logger
 from luft.common.utils import NoneStr
 from luft.tasks.bq_load_task import BQLoadTask
@@ -26,7 +26,7 @@ class BQLoadStagingTask(BQLoadTask):
             ts (str): time of valid.
 
         """
-        no_hist_stage_template = Path(pkg_resources.resource_filename('luft', BQ_STAGE_NO_HIST_DEFAULT_TEMPLATE))
+        no_hist_stage_template = Path(pkg_resources.resource_filename('luft', BQ_STAGE_DEFAULT_TEMPLATE))
         env_vars = self.get_env_vars(ts, env)
 
         if (BQLoadStagingTask.load_count is 0):

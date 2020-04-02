@@ -12,4 +12,16 @@ class BQLoadStagingTaskSchema(BQLoadTaskSchema):
     @post_load
     def make_task(self, data, **kwargs):
 
-        return BQLoadStagingTask(**kwargs)
+        return BQLoadStagingTask(name=data.get('name'), task_type=data.get('task_type'),
+                          source_system=data.get('source_system'),
+                          source_subsystem=data.get('source_subsystem'),
+                          columns=data.get('columns'),
+                          project_id=data.get('project_id'),
+                          location=data.get('location'),
+                          dataset_id=data.get('dataset_id'),
+                          skip_leading_rows=data.get('skip_leading_rows'),
+                          disable_check=data.get('disable_check'),
+                          field_delimiter=data.get('field_delimiter'),
+                          path_prefix=data.get('path_prefix'),
+                          yaml_file=data.get('yaml_file'), env=data.get('env'),
+                          thread_name=data.get('thread_name'), color=data.get('color'))
