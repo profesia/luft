@@ -15,7 +15,6 @@ logger = setup_logger('common', 'INFO')
 
 class BQLoadStagingTask(BQLoadTask):
     """BQ Load without history task."""
-    load_count = 0
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
@@ -29,12 +28,9 @@ class BQLoadStagingTask(BQLoadTask):
         no_hist_stage_template = Path(pkg_resources.resource_filename('luft', BQ_STAGE_DEFAULT_TEMPLATE))
         env_vars = self.get_env_vars(ts, env)
 
-        if (BQLoadStagingTask.load_count is 0):
-            self._create_dataset(self.stage_dataset_id)
-            self._run_bq_command(no_hist_stage_template.parent, [no_hist_stage_template.name],
-                                 env_vars)
-
-        BQLoadStagingTask.load_count += 1
+        self._create_dataset(self.stage_dataset_id)
+        self._run_bq_command(no_hist_stage_template.parent, [no_hist_stage_template.name],
+                             env_vars)
         self.load_csv()
 
 
