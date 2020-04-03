@@ -529,7 +529,6 @@ This file contains basic jdbc configuration for all of your databases. Every dat
 
 
 
-
 ## Running example
 
 ### 1. Creating `luft.cfg`
