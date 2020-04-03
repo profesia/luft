@@ -488,6 +488,48 @@ Inside yaml file, following parameters are supported:
 * *measures* - list. List of Master Measure names.
 * *selections* - List of selection dictionaries to filter data.
 
+### es-load
+
+Load data from elasticsearch server to blob storage. This commmand is not indempotent
+
+#### Command
+
+```bash
+luft es load
+```
+
+#### Command parameters
+
+* `y`, `--yml-path` (mandatory): folder or single yml file inside default tasks folder (see luft.cfg).
+* `-s`, `--start-date`: Start date in format YYYY-MM-DD for executing task in loop. If not specified yesterday date is used.
+* `-e`, `--end-date`: End date in format YYYY-MM-DD for executing task in loop. This day is not included. If not specified today date is used.
+* `-sys`, `--source-system`: override source_system parameter. See description in _Task_ section. Has to be same as name in jdbc.cfg to get right credentials for JDBC database.
+* `-sub`, `--source-subsystem`: override source_subsystem parameter. See description in _Task_ section.
+* `-b`, `--blacklist`: Name of tables/objects to be ignored during processing. E.g. --yml-path gis and -b TEST. It will process all objects in gis folder except object TEST.
+* `-w`, `--whitelist`: Name of tables/objects to be processed. E.g. --yml-path gis and -b TEST. It will process only object TEST.
+
+#### Requirements
+
+* Embulk in your docker image (see Dockerfile) or on your local.
+* Appropiriate Embulk plugins:
+  * Output - [embulk-output-gcs](https://github.com/embulk/embulk-output-gcs) or [embulk-output-s3](https://github.com/llibra/embulk-output-s3)
+  * Input - any you need of [embulk-input-elasticsearch-nosslverify](https://github.com/Lacoz/embulk-input-elasticsearch)
+* Luft installed :).
+* `es.cfg` file with right configuration.
+
+### es.cfg
+
+This file contains basic jdbc configuration for all of your databases. Every database has to have `[DATABASE_NAME]` header. This has to be same as *source_system*. Supported parameters are:
+
+* *uri* - uri of server
+* *port* - database port
+* *user* - username of user who you want to log into elastic
+* *password* - you can specify your password even it is not recommeded way how to do that because you password can be stolen. It is good for DEV but not for PROD.
+* *password_env* - name of enviromental variable used for storing password. If you use this variant you can then pass password in docker run command e.g. if password_env is set to  `MY_DB_PASS` then `docker run -e MY_DB_PASS=Password123 luft jdbc load -y <path_to_yml>` should work.
+
+
+
+
 ## Running example
 
 ### 1. Creating `luft.cfg`
