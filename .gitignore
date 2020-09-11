@@ -171,3 +171,4 @@ Temporary Items
 service_account.json
 /qlik_export
 /qlik*
+.history
